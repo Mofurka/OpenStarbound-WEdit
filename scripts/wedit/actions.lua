@@ -20,7 +20,7 @@ function wedit.actions.WE_AllInOne()
     local c = controller
     if not c.fireLocked and (c.primaryFire or c.altFire) then
       c.fireLock()
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", "/interface/wedit/compact/compact.config")
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", "/interface/wedit/compact/compact.config")
     end
   end
 end
@@ -50,14 +50,14 @@ function wedit.actions.WE_Select()
     if controller.primaryFire and not controller.fireLocked then
       -- Start selection; set first point.
       controller.selectStage = 1
-      controller.rawSelection[1] = tech.aimPosition()
+      controller.rawSelection[1] = player.aimPosition()
     end
   elseif controller.selectStage == 1 then
   controller.info("^shadow;^yellow;Drag mouse and let go to select an area.", {0,-1})
     -- Select stage 1: Selection started.
     if controller.primaryFire then
       -- Dragging selection; update second point.
-      controller.rawSelection[2] = tech.aimPosition()
+      controller.rawSelection[2] = player.aimPosition()
 
       -- Update converted coördinates.
       -- Compare X (1 is smallest):
@@ -151,13 +151,13 @@ function wedit.actions.WE_ColorPicker()
   controller.info("^shadow;^yellow;Shift + Fire: Open material picker.", {0,-4})
   controller.info("^shadow;^yellow;Current Block: ^red;" .. controller.selectedBlockToString() .. "^yellow;.", {0,-5})
 
-  wedit.debugRenderer:drawBlock(tech.aimPosition())
+  wedit.debugRenderer:drawBlock(player.aimPosition())
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
       require "/interface/wedit/materialPicker/materialPickerLoader.lua"
       materialPickerLoader.initializeConfig()
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", materialPickerLoader.config)
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", materialPickerLoader.config)
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then
@@ -237,9 +237,9 @@ function wedit.actions.WE_Pencil()
   end
 
   if wedit.getUserConfigData("brushShape") == "square" then
-    wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
+    wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
   elseif wedit.getUserConfigData("brushShape") == "circle" then
-    wedit.circle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
+    wedit.circle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
   end
 end
 
@@ -248,7 +248,7 @@ function wedit.actions.WE_BlockPinner()
   controller.info("^shadow;^orange;WEdit: Block Pinner")
   controller.info("^shadow;^yellow;Primary Fire: Pin foreground.", {0,-1})
   controller.info("^shadow;^yellow;Alt Fire: Pin background.", {0,-2})
-  local aimPos = tech.aimPosition()
+  local aimPos = player.aimPosition()
 
   wedit.debugRenderer:drawBlock(aimPos)
 
@@ -335,9 +335,9 @@ function wedit.actions.WE_Block()
   end
 
   if wedit.getUserConfigData("brushShape") == "square" then
-    wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("blockSize"), nil, callback)
+    wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("blockSize"), nil, callback)
   elseif wedit.getUserConfigData("brushShape") == "circle" then
-    wedit.circle(tech.aimPosition(), wedit.getUserConfigData("blockSize"), callback)
+    wedit.circle(player.aimPosition(), wedit.getUserConfigData("blockSize"), callback)
   end
 end
 
@@ -501,7 +501,7 @@ end
 --- Function to replace blocks within the selection with another one.
 -- Two actions; one to replace all existing blocks and one to replace the block type aimed at.
 function wedit.actions.WE_Replace()
-  local fgTile, bgTile = world.material(tech.aimPosition(), "foreground"), world.material(tech.aimPosition(), "background")
+  local fgTile, bgTile = world.material(player.aimPosition(), "foreground"), world.material(player.aimPosition(), "background")
 
   controller.info("^shadow;^orange;WEdit: Replace Tool")
   controller.info("^shadow;^yellow;Primary Fire: Replace in foreground.", {0,-1})
@@ -539,7 +539,7 @@ function wedit.actions.WE_Modifier()
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
       require "/interface/wedit/matmodPicker/matmodPickerLoader.lua"
       matmodPickerLoader.initializeConfig()
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", matmodPickerLoader.config)
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", matmodPickerLoader.config)
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then
@@ -556,9 +556,9 @@ function wedit.actions.WE_Modifier()
     end
 
     if wedit.getUserConfigData("brushShape") == "square" then
-      wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), nil, callback)
+      wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("matmodSize"), nil, callback)
     elseif wedit.getUserConfigData("brushShape") == "circle" then
-      wedit.circle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
+      wedit.circle(player.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
     end
   end
 end
@@ -585,13 +585,13 @@ function wedit.actions.WE_ModRemover()
     callback = debugCallback
   end
 
-  wedit.debugRenderer:drawBlock(tech.aimPosition())
+  wedit.debugRenderer:drawBlock(player.aimPosition())
 
   if not controller.fireLocked then
     if wedit.getUserConfigData("brushShape") == "square" then
-      wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), nil, callback)
+      wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("matmodSize"), nil, callback)
     elseif wedit.getUserConfigData("brushShape") == "circle" then
-      wedit.circle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
+      wedit.circle(player.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
     end
   end
 end
@@ -602,9 +602,9 @@ function wedit.actions.WE_ModPinner()
   controller.info("^shadow;^yellow;Primary Fire: Pin foreground.", {0,-1})
   controller.info("^shadow;^yellow;Alt Fire: Pin background.", {0,-2})
 
-  wedit.debugRenderer:drawBlock(tech.aimPosition())
+  wedit.debugRenderer:drawBlock(player.aimPosition())
 
-  local fg, bg = world.mod(tech.aimPosition(), "foreground"), world.mod(tech.aimPosition(), "background")
+  local fg, bg = world.mod(player.aimPosition(), "foreground"), world.mod(player.aimPosition(), "background")
   if fg then
     controller.info("^shadow;^yellow;Foreground Mod: ^red;" .. fg .. "^yellow;.", {0,-3})
   else
@@ -666,9 +666,9 @@ function wedit.actions.WE_Mod()
   end
 
   if wedit.getUserConfigData("brushShape") == "square" then
-    wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), nil, callback)
+    wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("matmodSize"), nil, callback)
   elseif wedit.getUserConfigData("brushShape") == "circle" then
-    wedit.circle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
+    wedit.circle(player.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
   end
 end
 
@@ -689,14 +689,14 @@ function wedit.actions.WE_Ruler()
     controller.shiftFireLock()
 
     -- Set first point
-    line[1] = tech.aimPosition()
+    line[1] = player.aimPosition()
     line[2] = {}
 
     -- Start selecting second point
     wedit.ruler.selecting = true
     wedit.ruler.bindA = Bind.create("primaryFire", function()
       -- Dragging selection; update second point.
-      line[2] = tech.aimPosition()
+      line[2] = player.aimPosition()
 
       -- Round each value down.
       line[1][1] = math.floor(line[1][1])
@@ -772,7 +772,7 @@ function wedit.actions.WE_Hydrator()
     elseif controller.altFire then
       require "/interface/wedit/liquidPicker/liquidPickerLoader.lua"
       liquidPickerLoader.initializeConfig()
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", liquidPickerLoader.config)
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", liquidPickerLoader.config)
       controller.fireLock()
     end
   end
@@ -816,7 +816,7 @@ function wedit.actions.WE_Dye()
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", "/interface/wedit/dyePicker/dyePicker.config")
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", "/interface/wedit/dyePicker/dyePicker.config")
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then
@@ -828,9 +828,9 @@ function wedit.actions.WE_Dye()
     end
 
     if wedit.getUserConfigData("brushShape") == "square" then
-      wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
+      wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
     elseif wedit.getUserConfigData("brushShape") == "circle" then
-      wedit.circle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
+      wedit.circle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
     end
   end
 end
@@ -850,13 +850,13 @@ function wedit.actions.WE_Hue()
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and controller.altFire then
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", "/interface/wedit/huePicker/huePicker.config")
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", "/interface/wedit/huePicker/huePicker.config")
       controller.shiftFireLock()
     elseif controller.primaryFire then
-       local hue = world.materialHueShift(tech.aimPosition(), "foreground")
+       local hue = world.materialHueShift(player.aimPosition(), "foreground")
        if hue then
         huePickerUtil.serializeHue(hue)
-        world.sendEntityMessage(entity.id(), "wedit_hueChanged")
+        world.sendEntityMessage(player.id(), "wedit_hueChanged")
        end
     end
   elseif not controller.shiftFireLocked then
@@ -872,9 +872,9 @@ function wedit.actions.WE_Hue()
     end
 
     if wedit.getUserConfigData("brushShape") == "square" then
-      wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
+      wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
     elseif wedit.getUserConfigData("brushShape") == "circle" then
-      wedit.circle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
+      wedit.circle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
     end
   end
 end
@@ -896,7 +896,7 @@ function wedit.actions.WE_RandomFill()
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", "/interface/wedit/randomPicker/randomPicker.config")
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", "/interface/wedit/randomPicker/randomPicker.config")
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked and layer and controller.validSelection() then
@@ -928,7 +928,7 @@ function wedit.actions.WE_RandomPencil()
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
-      world.sendEntityMessage(entity.id(), "interact", "ScriptPane", "/interface/wedit/randomPicker/randomPicker.config")
+      world.sendEntityMessage(player.id(), "interact", "ScriptPane", "/interface/wedit/randomPicker/randomPicker.config")
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then
@@ -952,9 +952,9 @@ function wedit.actions.WE_RandomPencil()
     end
 
     if wedit.getUserConfigData("brushShape") == "square" then
-      wedit.rectangle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
+      wedit.rectangle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), nil, callback)
     elseif wedit.getUserConfigData("brushShape") == "circle" then
-      wedit.circle(tech.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
+      wedit.circle(player.aimPosition(), wedit.getUserConfigData("pencilSize"), callback)
     end
   end
 end
@@ -965,7 +965,7 @@ function wedit.actions.WE_Calibrate()
   controller.info("^shadow;^yellow;Make sure the highlighted block is", {0,-2})
   controller.info("^shadow;^yellow;empty and has a background block.", {0,-3})
 
-  local aimPos = tech.aimPosition()
+  local aimPos = player.aimPosition()
 
   wedit.debugRenderer:drawBlock(aimPos, "green")
 

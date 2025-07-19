@@ -12,10 +12,13 @@
 -- 2. On init, call wedit.controller.init(). This will internally initialize wedit, so wedit.init() shouldn't be called.
 -- 3. On update, call wedit.controller.update(args). This will internally update wedit, so wedit.update(args) shouldn't be called.
 
+
 wedit = {}
 wedit.controller = {}
 wedit.actions = {}
 local controller = wedit.controller
+
+
 
 -- Load dependencies
 require "/scripts/messageutil.lua"
@@ -87,7 +90,7 @@ end
 -- @param layer Layer to select block from.
 -- @return Material name or false (air).
 function controller.updateColor(layer)
-  local tile = world.material(tech.aimPosition(), layer)
+  local tile = world.material(player.aimPosition(), layer)
   if tile then
     controller.selectedBlock = tile
   else
@@ -263,15 +266,17 @@ function controller.init()
 
   sb.logInfo("WEdit Controller: Initialized WEdit.")
 end
-
+function init()
+  controller:init()
+end
 --- Update function, called in the main update callback.
-function controller.update(args)
-  wedit.update(args)
+function controller.update(dt)
+  wedit.update()
 
   -- Check if LMB / RMB are held down this game tick.
-  controller.primaryFire = args.moves["primaryFire"]
-  controller.altFire = args.moves["altFire"]
-  controller.shiftHeld = not args.moves["run"]
+  controller.primaryFire = input.mouse("MouseLeft")
+  controller.altFire = input.mouse("MouseRight")
+  controller.shiftHeld = input.key("LShift")
 
   -- Removes the lock on your fire keys (LMB/RMB) if both have been released.
   if controller.fireLocked and not controller.primaryFire and not controller.altFire then
@@ -282,26 +287,8 @@ function controller.update(args)
     controller.shiftFireLocked = false
   end
 
-  -- Set noclip movement parameters, if noclipping is enabled.
-  if controller.noclipping then
-    mcontroller.controlParameters({
-      gravityEnabled = false,
-      collisionEnabled = false,
-      standingPoly = {},
-      crouchingPoly = {},
-      mass = 0,
-      runSpeed = 0,
-      walkSpeed = 0,
-      airFriction = 99999,
-      airForce = 99999
-    })
-    wedit.logger:setLogMap("Noclip", string.format("Press '%s' to stop flying.", wedit.getUserConfigData("noclipBind")))
-  else
-    wedit.logger:setLogMap("Noclip", string.format("Press '%s' to fly.", wedit.getUserConfigData("noclipBind")))
-  end
-
   -- As all WEdit items are two handed, we only have to check the primary item.
-  local primaryItem = world.entityHandItemDescriptor(entity.id(), "primary")
+  local primaryItem = world.entityHandItemDescriptor(player.id(), "primary")
   local action = nil
   if primaryItem and primaryItem.parameters and primaryItem.parameters.shortdescription then action = primaryItem.parameters.shortdescription end
 
@@ -322,25 +309,28 @@ function controller.update(args)
     controller.showSelection()
   end
 end
+function update()
+  controller:update(dt)
+end
 
 function controller:cycleMaterialCollision()
   controller.materialCollision = controller.materialCollision + 1
   if controller.materialCollision > 2 then
     controller.materialCollision = 0
   end
-  animator.playSound("startDash")
 end
 
 --- Uninit function, called in the main uninit callback.
 function controller.uninit()
-  tech.setParentState()
 
   -- Mark interfaces for closing.
   if status.statusProperty("wedit.compact.open", false) then
     status.setStatusProperty("wedit.compact.close", true)
   end
 end
-
+function uninit()
+  controller:uninit()
+end
 -- #endregion
 
 -- #region WEdit Tools

@@ -39,7 +39,12 @@
   },
   {
     "op": "add",
-    "path": "/genericScriptContexts/weditPGS",
+    "path": "/genericScriptContexts/weditHandlerPGS",
     "value": "/scripts/wedit/weditHandlerPgs.lua"
+  },
+  {
+    "op": "add",
+    "path": "/genericScriptContexts/weditControllerPGS",
+    "value": "/scripts/wedit/controller.lua"
   }
 ]
