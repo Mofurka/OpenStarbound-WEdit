@@ -381,8 +381,8 @@ end
 -- @param[opt=false] force Force redrawing even if the block matches.
 function wedit.pencil(pos, layer, block, hueshift, force)
   if not hueshift then hueshift = wedit.neighborHueshift(pos, layer, block) or 0 end
-
-  local mat = world.material(pos, layer)
+  local cleanLayer = string.match(layer, "^[^+]+")
+  local mat = world.material(pos, cleanLayer)
   if force or ((mat and mat ~= block) or not block) then
     wedit._pencil(pos, layer, block, hueshift)
   else
@@ -393,7 +393,8 @@ function wedit.pencil(pos, layer, block, hueshift, force)
 end
 
 function wedit._pencil(pos, layer, block, hueshift)
-  world.damageTiles({pos}, layer, pos, "blockish", 9999, 0)
+  local cleanLayer = string.match(layer, "^[^+]+")
+  world.damageTiles({pos}, cleanLayer, pos, "blockish", 9999, 0)
   if block and wedit.positionLocker:lock(layer, pos) then
     wedit.taskManager:start(Task.new({function(task)
       world.placeMaterial(pos, layer, block, hueshift, true)
@@ -424,8 +425,9 @@ function wedit.neighborHueshift(pos, layer, block)
 
   -- Adjacent
   for _,position in ipairs(positions) do
-    if world.material(position, layer) == block then
-      return world.materialHueShift(position, layer)
+    local cleanLayer = string.match(layer, "^[^+]+")
+    if world.material(position, cleanLayer) == block then
+      return world.materialHueShift(position, cleanLayer)
     end
   end
 

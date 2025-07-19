@@ -36,5 +36,10 @@
     "op": "add",
     "path": "/genericScriptContexts/wedit",
     "value": "/scripts/wedit/techLoader.lua"
+  },
+  {
+    "op": "add",
+    "path": "/genericScriptContexts/weditPGS",
+    "value": "/scripts/wedit/weditHandlerPgs.lua"
   }
 ]

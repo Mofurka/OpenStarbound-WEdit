@@ -18,7 +18,6 @@ wedit.actions = {}
 local controller = wedit.controller
 
 -- Load dependencies
-require "/scripts/wedit/keybinds.lua"
 require "/scripts/messageutil.lua"
 -- Load core library
 require "/scripts/wedit/wedit.lua"
@@ -210,6 +209,8 @@ function controller.init()
   controller.fireLocked = false
   -- Used to determine if Shift is held down.
   controller.shiftHeld = false
+  -- Used for cycling through materialCollision states in OpenSB.
+  controller.materialCollision = 0
   -- Number used by WE_Select to determine the selection stage (0: Nothing, 1: Selecting).
   controller.selectStage = 0
   -- Table used to store the current raw selection coordinates.
@@ -237,39 +238,6 @@ function controller.init()
   -- Load config once while still initializing.
   controller.updateUserConfig()
 
-  -- #region NoClip Binds
-
-  -- Set up noclip using Keybinds.
-  local noclipBind = wedit.getUserConfigData("noclipBind");
-  controller.noclipBind = Bind.create(noclipBind, function()
-    controller.noclipping = not controller.noclipping
-    if controller.noclipping then
-      tech.setParentState("fly")
-      for i,v in ipairs(controller.noclipBinds) do
-        v:rebind()
-      end
-    else
-      tech.setParentState()
-      for i,v in ipairs(controller.noclipBinds) do
-        v:unbind()
-      end
-    end
-  end, false, noclipBind == "")
-
-  local adjustPosition = function(offset)
-    local pos = mcontroller.position()
-    mcontroller.setPosition({pos[1] + offset[1], pos[2] + offset[2]})
-    mcontroller.setVelocity({0,0})
-  end
-  controller.noclipBinds = {}
-  table.insert(controller.noclipBinds, Bind.create("up", function() adjustPosition({0,wedit.getUserConfigData("noclipSpeed")}) end, true, true))
-  table.insert(controller.noclipBinds, Bind.create("down", function() adjustPosition({0,-wedit.getUserConfigData("noclipSpeed")}) end, true, true))
-  table.insert(controller.noclipBinds, Bind.create("left", function() adjustPosition({-wedit.getUserConfigData("noclipSpeed"),0}) end, true, true))
-  table.insert(controller.noclipBinds, Bind.create("right", function() adjustPosition({wedit.getUserConfigData("noclipSpeed"),0}) end, true, true))
-  table.insert(controller.noclipBinds, Bind.create("up=false down=false left=false right=false", function() mcontroller.setVelocity({0,0}) end, false, true))
-
-  -- #endregion
-
   -- #region Message Handlers
 
   message.setHandler("wedit.updateConfig", localHandler(controller.updateUserConfig))
@@ -286,6 +254,9 @@ function controller.init()
   message.setHandler("wedit.showInfo", localHandler(function(bool)
     controller.showInfo = bool
     status.setStatusProperty("wedit.showingInfo", bool)
+  end))
+  message.setHandler("wedit.cycleMaterialCollision", localHandler(function()
+    controller:cycleMaterialCollision()
   end))
 
   -- #endregion
@@ -350,6 +321,14 @@ function controller.update(args)
   if controller.validSelection() then
     controller.showSelection()
   end
+end
+
+function controller:cycleMaterialCollision()
+  controller.materialCollision = controller.materialCollision + 1
+  if controller.materialCollision > 2 then
+    controller.materialCollision = 0
+  end
+  animator.playSound("startDash")
 end
 
 --- Uninit function, called in the main uninit callback.

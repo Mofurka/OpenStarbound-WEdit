@@ -204,13 +204,24 @@ function wedit.actions.WE_Pencil()
   controller.info("^shadow;^yellow;Alt Fire: Draw on background.", {0,-2})
   controller.info("^shadow;^yellow;Shift + Fire: Erase on layer.", {0,-3})
   controller.info("^shadow;^yellow;Current Block: ^red;" .. controller.selectedBlockToString() .. "^yellow;.", {0,-4})
+  controller.info("^shadow;^yellow;Material Collision: ^red;" .. controller.materialCollision .. "^yellow;.", {0,-5})
 
   local debugCallback = function(pos)
     wedit.debugRenderer:drawBlock(pos)
   end
 
-  local layer = controller.primaryFire and "foreground" or
-    controller.altFire and "background" or nil
+  local layer
+  if controller.primaryFire then
+    layer = "foreground"
+      if controller.materialCollision == 1 then
+        layer = string.format("%s+%s", layer, "empty")
+      elseif controller.materialCollision == 2 then
+        layer = string.format("%s+%s", layer, "platform")
+      end
+  elseif controller.altFire then
+    layer = "background"
+  end
+
 
   local block = controller.selectedBlock
   if controller.shiftHeld then block = false end
@@ -533,7 +544,7 @@ function wedit.actions.WE_Modifier()
     end
   elseif not controller.shiftFireLocked then
     local layer = controller.primaryFire and "foreground" or controller.altFire and "background" or nil
-  
+
     local callback
     if layer then
       callback = function(pos)
@@ -549,7 +560,7 @@ function wedit.actions.WE_Modifier()
     elseif wedit.getUserConfigData("brushShape") == "circle" then
       wedit.circle(tech.aimPosition(), wedit.getUserConfigData("matmodSize"), callback)
     end
-  end 
+  end
 end
 
 --- Function to remove modifications from terrain (matmods).
@@ -558,7 +569,7 @@ function wedit.actions.WE_ModRemover()
   controller.info("^shadow;^yellow;Primary Fire: Remove from foreground.", {0,-1})
   controller.info("^shadow;^yellow;Alt Fire: Remove from background.", {0,-2})
 
-  
+
   local debugCallback = function(pos)
     wedit.debugRenderer:drawBlock(pos)
   end
@@ -833,7 +844,7 @@ function wedit.actions.WE_Hue()
 
   local layer = controller.primaryFire and "foreground" or
     controller.altFire and "background" or nil
-  
+
   local hue = huePickerUtil.getSerializedHue() or 0
   controller.info("^shadow;^yellow;Current hue: ^red;" .. hue .. "^yellow;.", {0,-5})
 
@@ -879,7 +890,7 @@ function wedit.actions.WE_RandomFill()
   controller.info("^shadow;^yellow;Current percentage: ^red;" .. perc .. "^yellow;.", {0,-4})
   controller.info("^shadow;^yellow;Current block: ^red;" .. controller.selectedBlockToString() .. "^yellow;.", {0,-5})
   controller.info("^shadow;^yellow;Current hue: ^red;" .. hue .. "^yellow;.", {0,-6})
-  
+
   local layer = controller.primaryFire and "foreground" or
     controller.altFire and "background" or nil
 
@@ -911,7 +922,7 @@ function wedit.actions.WE_RandomPencil()
   controller.info("^shadow;^yellow;Current percentage: ^red;" .. perc .. "^yellow;.", {0,-4})
   controller.info("^shadow;^yellow;Current block: ^red;" .. controller.selectedBlockToString() .. "^yellow;.", {0,-5})
   controller.info("^shadow;^yellow;Current hue: ^red;" .. hue .. "^yellow;.", {0,-6})
-  
+
   local layer = controller.primaryFire and "foreground" or
     controller.altFire and "background" or nil
 
@@ -921,7 +932,7 @@ function wedit.actions.WE_RandomPencil()
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then
-    if layer then 
+    if layer then
       controller.shiftFireLock()
     end
 
