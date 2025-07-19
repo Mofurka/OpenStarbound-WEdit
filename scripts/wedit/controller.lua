@@ -258,9 +258,6 @@ function controller.init()
     controller.showInfo = bool
     status.setStatusProperty("wedit.showingInfo", bool)
   end))
-  message.setHandler("wedit.cycleMaterialCollision", localHandler(function()
-    controller:cycleMaterialCollision()
-  end))
 
   -- #endregion
 
@@ -278,6 +275,12 @@ function controller.update(dt)
   controller.altFire = input.mouse("MouseRight")
   controller.shiftHeld = input.key("LShift")
 
+  if input.bindDown("opensb", "materialCollisionCycle") then
+    controller.materialCollision = controller.materialCollision + 1
+    if controller.materialCollision > 2 then
+      controller.materialCollision = 0
+    end
+  end
   -- Removes the lock on your fire keys (LMB/RMB) if both have been released.
   if controller.fireLocked and not controller.primaryFire and not controller.altFire then
     controller.fireLocked = false
@@ -313,12 +316,6 @@ function update()
   controller:update(dt)
 end
 
-function controller:cycleMaterialCollision()
-  controller.materialCollision = controller.materialCollision + 1
-  if controller.materialCollision > 2 then
-    controller.materialCollision = 0
-  end
-end
 
 --- Uninit function, called in the main uninit callback.
 function controller.uninit()
