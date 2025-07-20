@@ -23,7 +23,7 @@ function matmodPickerLoader.initializeConfig()
 
     for label, matmod in pairs(mods) do
         if label ~= baseGameAssets then
-            matmodPickerLoader.addLabel(label .. "Mat Mods")
+            matmodPickerLoader.addLabel(label .. " Mat Mods")
             for _, mod in ipairs(matmod) do
                 matmodPickerLoader.addMod(mod)
             end
