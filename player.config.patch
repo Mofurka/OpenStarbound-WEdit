@@ -34,16 +34,6 @@
   },
   {
     "op": "add",
-    "path": "/genericScriptContexts/wedit",
-    "value": "/scripts/wedit/techLoader.lua"
-  },
-  {
-    "op": "add",
-    "path": "/genericScriptContexts/weditHandlerPGS",
-    "value": "/scripts/wedit/weditHandlerPgs.lua"
-  },
-  {
-    "op": "add",
     "path": "/genericScriptContexts/weditControllerPGS",
     "value": "/scripts/wedit/controller.lua"
   }
