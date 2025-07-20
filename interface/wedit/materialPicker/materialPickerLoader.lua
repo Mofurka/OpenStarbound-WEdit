@@ -1,7 +1,6 @@
 materialPickerLoader = {}
 
 local x, y, i
-local used = {}
 materialPickerLoader.initialized = false
 
 function materialPickerLoader.initializeConfig()
@@ -17,28 +16,62 @@ function materialPickerLoader.initializeConfig()
 
     x, y, i = 0, -19, 0
 
-    materialPickerLoader.addAir()
+    --materialPickerLoader.addAir()
+    local baseGameAssets = "Base Game Assets"
 
-    for _, v in ipairs(materials) do
-        materialPickerLoader.addMaterial(v)
+    materialPickerLoader.addLabel(baseGameAssets .. " Materials")
+    for _, mat in ipairs(materials[baseGameAssets]) do
+        materialPickerLoader.addMaterial(mat)
     end
 
-    for _, v in ipairs(platforms) do
-        materialPickerLoader.addMaterial(v)
+    materialPickerLoader.addLabel(baseGameAssets .. " Platforms")
+    for _, mat in ipairs(platforms[baseGameAssets]) do
+        materialPickerLoader.addMaterial(mat)
+    end
+
+    for label, material in pairs(materials) do
+        if label ~= baseGameAssets then
+            materialPickerLoader.addLabel(label .. " Materials")
+            for _, mat in ipairs(material) do
+                materialPickerLoader.addMaterial(mat)
+            end
+        end
+    end
+
+    for label, material in ipairs(platforms) do
+        if label ~= baseGameAssets then
+            materialPickerLoader.addLabel(label .. " Platforms")
+            for _, mat in ipairs(material) do
+                materialPickerLoader.addMaterial(mat)
+            end
+        end
     end
 
 end
 
+function materialPickerLoader.addLabel(label)
+
+    materialPickerLoader.nextPosition(true, true)
+
+    local labelConfig = {
+        type = "label",
+        value = label,
+        position = { x, y },
+        zlevel = 0,
+    }
+
+    materialPickerLoader.config.gui.materialScroll.children[label] = labelConfig
+
+    materialPickerLoader.nextPosition(true)
+
+end
+
 function materialPickerLoader.addMaterial(material)
-    if used[material.name] then
-        return
-    end
-    used[material.name] = true
 
     local emtpyFrameBackground = {
         type = "image",
         file = "/interface/wedit/materialPicker/materials/emptyFrameBackground.png",
-        position = {x, y},
+        position = { x, y },
         zlevel = 1,
     }
 
@@ -56,20 +89,22 @@ function materialPickerLoader.addMaterial(material)
     local emptyFrame = {
         type = "image",
         file = "/interface/wedit/materialPicker/materials/emptyFrame.png",
-        position = {x, y},
+        position = { x, y },
         zlevel = 3,
     }
 
-
-
     materialPickerLoader.config.gui.materialScroll.children[material.name .. "emptyFrameBackground"] = emtpyFrameBackground
-    materialPickerLoader.config.gui.materialScroll.children[material.name .. "emptyFrame"] = emptyFrame
+
     materialPickerLoader.config.gui.materialScroll.children[material.name] = button
 
+    materialPickerLoader.config.gui.materialScroll.children[material.name .. "emptyFrame"] = emptyFrame
+
     materialPickerLoader.nextPosition()
+
 end
 
 function materialPickerLoader.addAir()
+
     local button = {
         type = "button",
         base = "/interface/wedit/materialPicker/materials/air.png",
@@ -83,14 +118,30 @@ function materialPickerLoader.addAir()
     materialPickerLoader.config.gui.materialScroll.children["air"] = button
 
     materialPickerLoader.nextPosition()
+
 end
 
-function materialPickerLoader.nextPosition()
-    i = i + 1
-    if i > 9 then
-        y = y - 22
-        i = 0
+function materialPickerLoader.nextPosition(isLabel, isUp)
+
+    if isLabel then
+        if isUp then
+            if i ~= 0 then
+                y = y - 10
+            else
+                y = y + 10
+            end
+                i = 0
+                else
+                y = y - 22
+                end
+        else
+        i = i + 1
+        if i > 9 then
+            y = y - 22
+            i = 0
+        end
     end
 
     x = i * 22
+
 end

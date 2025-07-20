@@ -1,7 +1,6 @@
 matmodPickerLoader = {}
 
 local x, y, i
-local used = {}
 matmodPickerLoader.initialized = false
 
 function matmodPickerLoader.initializeConfig()
@@ -12,21 +11,41 @@ function matmodPickerLoader.initializeConfig()
 
     matmodPickerLoader.config = root.assetJson("/interface/wedit/matmodPicker/matmodPicker.config")
 
-    local mods = root.assetJson("/interface/wedit/matmodPicker/matmods.json")
+    local mods = root.assetJson("/interface/wedit/matmodPicker/matmods.json") -- { "modName" : [ { "name" : "matmod", "buttonImage" : "/tiles/mods/air.png" } ] }
 
     x, y, i = 0, 0, 0
 
-    for _, v in ipairs(mods) do
-        matmodPickerLoader.addMod(v)
+    local baseGameAssets = "Base Game Assets"
+    matmodPickerLoader.addLabel(baseGameAssets .. " Mat Mods")
+    for _, mod in ipairs(mods[baseGameAssets]) do
+        matmodPickerLoader.addMod(mod)
+    end
+
+    for label, matmod in pairs(mods) do
+        if label ~= baseGameAssets then
+            matmodPickerLoader.addLabel(label .. "Mat Mods")
+            for _, mod in ipairs(matmod) do
+                matmodPickerLoader.addMod(mod)
+            end
+        end
     end
 end
 
-function matmodPickerLoader.addMod(mod)
-    if used[mod.name] then
-        return
-    end
-    used[mod.name] = true
+function matmodPickerLoader.addLabel(label)
+    matmodPickerLoader.nextPosition(true, true)
+    local labelConfig = {
+        type = "label",
+        value = label,
+        position = { x, y },
+        zlevel = 0,
+    }
 
+    matmodPickerLoader.config.gui.modScroll.children[label] = labelConfig
+
+    matmodPickerLoader.nextPosition(true)
+end
+
+function matmodPickerLoader.addMod(mod)
     local emtpyFrameBackground = {
         type = "image",
         file = "/interface/wedit/materialPicker/materials/emptyFrameBackground.png",
@@ -53,17 +72,32 @@ function matmodPickerLoader.addMod(mod)
     }
 
     matmodPickerLoader.config.gui.modScroll.children[mod.name .. "emptyFrameBackground"] = emtpyFrameBackground
+
     matmodPickerLoader.config.gui.modScroll.children[mod.name] = button
+
     matmodPickerLoader.config.gui.modScroll.children[mod.name .. "emptyFrame"] = emptyFrame
 
     matmodPickerLoader.nextPosition()
 end
 
-function matmodPickerLoader.nextPosition()
-    i = i + 1
-    if i > 5 then
-        y = y - 22
-        i = 0
+function matmodPickerLoader.nextPosition(isLabel, isUp) -- Its looks like . . shit. Need to fix it
+    if isLabel then
+        if isUp then
+            if i ~= 0 then
+                y = y - 10
+            else
+                y = y + 10
+            end
+            i = 0
+        else
+            y = y - 22
+        end
+    else
+        i = i + 1
+        if i > 5 then
+            y = y - 22
+            i = 0
+        end
     end
 
     x = i * 22
