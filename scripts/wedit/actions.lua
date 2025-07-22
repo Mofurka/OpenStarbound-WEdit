@@ -155,9 +155,9 @@ function wedit.actions.WE_ColorPicker()
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
-      require "/interface/wedit/materialPicker/materialPickerLoader.lua"
-      materialPickerLoader.initializeConfig()
-      world.sendEntityMessage(player.id(), "interact", "ScriptPane", materialPickerLoader.config)
+      --require "/interface/wedit/materialPicker/materialPickerLoader.lua"
+      --materialPickerLoader.initializeConfig()
+      player.interact("ScriptPane", "/interface/wedit/materialPicker/materialPicker.config")
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then

@@ -9,7 +9,7 @@
   "requires" : [],
   "steamContentId" : "734859295",
   "tags" : "Crafting and Building|Cheats and God Items|User Interface|In-Game Tools",
-  "version" : "1.4.4.8",
+  "version" : "1.7.0",
     "scripts" : {
       "postLoad" : ["/interface/wedit/materialPicker/materialsAndPlatformPostload.lua", "/interface/wedit/matmodPicker/matmodsPostload.lua"]
     }

@@ -6,7 +6,6 @@ local matitems = assets.scan("/items/materials", "matitem")
 -- example ["/tiles/materials/ikn_marblewp.material","/tiles/materials/sand.material","/tiles/materials/viridescent/viridescent_tile1.material","/tiles/materials/darksmoothstone.material","/tiles/materials/havencrest/havencrest_tile8.material","/tiles/materials/elysia/elysia_tile1.material"]
 
 local materialDict = {}
-local platformDict = {}
 
 local function getModName(assetSourcePaths, modPath)
     local mod = assetSourcePaths[modPath]
@@ -26,35 +25,38 @@ local sourcePaths = assets.sourcePaths(true)
 for _, path in ipairs(matitems) do
     local material = assets.json(path)
     local origin = assets.origin(path)
-    local _, friendlyName = getModName(sourcePaths, origin)
-    --[[    {
-            "itemName" : "modernplatform",
-            "price" : 0,
-            "category" : "platform",
-            "rarity" : "Common",
-            "inventoryIcon" : "modernplatform.png",
-            "materialId" : 47,
-            "learnBlueprintsOnPickup" : [ "modernplatform" ]
-        }]]
+    local name, friendlyName = getModName(sourcePaths, origin)
 
     if material then
         if material.category == "block" then
-            if materialDict[friendlyName] == nil then
-                materialDict[friendlyName] = {}
+            name = name .. "_blocks"
+            if materialDict[name] == nil then
+                materialDict[name] = {
+                    friendlyName = friendlyName .. " Blocks",
+                    category = "block",
+                    items = {},
+                    modImage = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
+                }
             end
-            local buttonImage = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
-            table.insert(materialDict[friendlyName], {
+            local image = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
+            table.insert(materialDict[name]["items"], {
                 name = material.itemName,
-                buttonImage = buttonImage
+                image = image
             })
         elseif material.category == "platform" then
-            if platformDict[friendlyName] == nil then
-                platformDict[friendlyName] = {}
+            name = name .. "_platforms"
+            if materialDict[name] == nil then
+                materialDict[name] = {
+                    friendlyName = friendlyName .. " Platforms",
+                    category = "platform",
+                    items = {},
+                    modImage = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
+                }
             end
-            local buttonImage = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
-            table.insert(platformDict[friendlyName], {
+            local image = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
+            table.insert(materialDict[name]["items"], {
                 name = material.itemName,
-                buttonImage = buttonImage
+                image = image
             })
         end
     end
@@ -62,4 +64,3 @@ for _, path in ipairs(matitems) do
 end
 
 assets.add(materialsConfigPath, materialDict)
-assets.add(platformsConfigPath, platformDict)

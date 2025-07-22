@@ -395,10 +395,10 @@ end
 function wedit._pencil(pos, layer, block, hueshift)
   local cleanLayer = string.match(layer, "^[^+]+")
   world.damageTiles({pos}, cleanLayer, pos, "blockish", 9999, 0)
-  if block and wedit.positionLocker:lock(layer, pos) then
+  if block and wedit.positionLocker:lock(cleanLayer, pos) then
     wedit.taskManager:start(Task.new({function(task)
       world.placeMaterial(pos, layer, block, hueshift, true)
-      wedit.positionLocker:unlock(layer, pos)
+      wedit.positionLocker:unlock(cleanLayer, pos)
       task:complete()
     end}), wedit.getUserConfigData("delay"))
   end
