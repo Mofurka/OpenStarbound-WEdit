@@ -22,35 +22,29 @@ function init()
 
 end
 
-function update()
-
-
-end
 
 function populateCategorySorted()
     widget.clearListItems(CATEGORY_LIST)
-    populateCategoryList(BASE_GAME_ASSETS_MATERIALS, materials[BASE_GAME_ASSETS_MATERIALS])
-    populateCategoryList(BASE_GAME_ASSETS_PLATFORM, materials[BASE_GAME_ASSETS_PLATFORM])
+    addCategory(BASE_GAME_ASSETS_MATERIALS, materials[BASE_GAME_ASSETS_MATERIALS])
+    addCategory(BASE_GAME_ASSETS_PLATFORM, materials[BASE_GAME_ASSETS_PLATFORM])
     for categoryName, categoryData in pairs(materials) do
         if categoryName ~= BASE_GAME_ASSETS_MATERIALS and categoryName ~= BASE_GAME_ASSETS_PLATFORM then
-            populateCategoryList(categoryName, categoryData)
+            addCategory(categoryName, categoryData)
         end
     end
 end
 
-function populateCategoryList(categoryName, categoryData)
+function addCategory(categoryName, categoryData)
     local w = widget.addListItem(CATEGORY_LIST)
     local wName = CATEGORY_LIST .. "." .. w
     widget.setImage(wName .. ".categoryIcon", categoryData.modImage or "/assetmissing.png")
-    widget.setData(wName .. ".emptyFrameForeground", {defaultTooltip = categoryData.friendlyName})
+    widget.setData(wName .. ".emptyFrameForeground", { defaultTooltip = categoryData.friendlyName })
     widget.setData(wName, categoryName)
 end
 
 function pickCategory()
     local data = widget.getData(CATEGORY_LIST .. "." .. widget.getListSelected(CATEGORY_LIST))
-
-        populateItemList(materials[data]["items"])
-
+    populateItemList(materials[data]["items"])
 end
 
 function populateItemList(items)
@@ -62,14 +56,16 @@ function populateItemList(items)
         local w = widget.addListItem(MATERIAL_LIST)
         local wName = MATERIAL_LIST .. "." .. w
         widget.setImage(wName .. ".materialIcon", item.image)
-        widget.setData(wName .. ".emptyFrameForeground", {defaultTooltip = item.name})
+        widget.setData(wName .. ".emptyFrameForeground", { defaultTooltip = item.name })
         widget.setData(wName, item.name)
     end
 end
 
 function pickMaterial()
     local selected = widget.getListSelected(MATERIAL_LIST)
-    if not selected then return end
+    if not selected then
+        return
+    end
     local data = widget.getData(MATERIAL_LIST .. "." .. selected)
     world.sendEntityMessage(player.id(), "wedit.updateColor", data)
 end
@@ -92,7 +88,6 @@ function createTooltip(screenPosition)
         end
     end
 end
-
 
 function uninit()
     widget.clearListItems(MATERIAL_LIST)

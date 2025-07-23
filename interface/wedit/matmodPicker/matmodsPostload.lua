@@ -21,15 +21,19 @@ local matmodData = {} -- { "modName" : [ { "name" : "matmod", "buttonImage" : "/
 for _, path in ipairs(matmodList) do
     local matmod = assets.json(path)
     local origin = assets.origin(path)
-    local _, friendlyName = getModName(sourcePaths, origin)
+    local name, friendlyName = getModName(sourcePaths, origin)
     if matmod then
-        if not matmodData[friendlyName] then
-            matmodData[friendlyName] = {}
+        if not matmodData[name] then
+            matmodData[name] = {
+                image = "/tiles/mods/" .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png",
+                friendlyName = friendlyName .. " Mat Mods",
+                items = {},
+            }
         end
-        local buttonImage = "/tiles/mods/" .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png"
-        table.insert(matmodData[friendlyName], {
-            name = matmod.modName,
-            buttonImage = buttonImage,
+        local image = "/tiles/mods/" .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png"
+        table.insert(matmodData[name]["items"], {
+            name = matmod.name,
+            image = image,
         })
     end
 end

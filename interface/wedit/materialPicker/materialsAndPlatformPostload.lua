@@ -28,12 +28,12 @@ for _, path in ipairs(matitems) do
     local name, friendlyName = getModName(sourcePaths, origin)
 
     if material then
-        if material.category == "block" then
-            name = name .. "_blocks"
+        if material.category == "platform" then
+            name = name .. "_platforms"
             if materialDict[name] == nil then
                 materialDict[name] = {
-                    friendlyName = friendlyName .. " Blocks",
-                    category = "block",
+                    friendlyName = friendlyName .. " Platforms",
+                    category = "platform",
                     items = {},
                     modImage = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
                 }
@@ -43,12 +43,12 @@ for _, path in ipairs(matitems) do
                 name = material.itemName,
                 image = image
             })
-        elseif material.category == "platform" then
-            name = name .. "_platforms"
+        else
+            name = name .. "_blocks"
             if materialDict[name] == nil then
                 materialDict[name] = {
-                    friendlyName = friendlyName .. " Platforms",
-                    category = "platform",
+                    friendlyName = friendlyName .. " Blocks",
+                    category = material.category or "unknown",
                     items = {},
                     modImage = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
                 }

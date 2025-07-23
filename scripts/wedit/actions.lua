@@ -537,9 +537,7 @@ function wedit.actions.WE_Modifier()
 
   if controller.shiftHeld then
     if not controller.shiftFireLocked and (controller.primaryFire or controller.altFire) then
-      require "/interface/wedit/matmodPicker/matmodPickerLoader.lua"
-      matmodPickerLoader.initializeConfig()
-      world.sendEntityMessage(player.id(), "interact", "ScriptPane", matmodPickerLoader.config)
+      player.interact("ScriptPane", "/interface/wedit/matmodPicker/matmodPicker.config")
       controller.shiftFireLock()
     end
   elseif not controller.shiftFireLocked then

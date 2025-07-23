@@ -1,7 +1,0 @@
-[
-  {
-    "op" : "add",
-    "path" : "/keyActions/player/-",
-    "value" : { "label" : "^orange;WEdit^reset; Toggle Noclip", "action" : "PlayerTechAction2" }
-  }
-]

@@ -159,13 +159,10 @@ function controller.updateUserConfig()
     wedit.user[k] = v
   end
 
-  if controller.noclipBind then
-    if cfg.noclipBind == "" then
-      controller.noclipBind:unbind()
-    else
-      controller.noclipBind:rebind()
-      controller.noclipBind:change(cfg.noclipBind)
-    end
+  if cfg.enable then
+    script.setUpdateDelta(1)
+  else
+    script.setUpdateDelta(0)
   end
 
   if wedit.getUserConfigData("clearSchematics") then

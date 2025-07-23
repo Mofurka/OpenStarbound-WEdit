@@ -3,8 +3,7 @@
 weditInterface = {}
 
 local widgets = {
-  noclipBind = "weditScroll.noClipBind",
-  noclipSpeed = "weditScroll.noClipSpeed",
+  enable = "weditScroll.chkEnableWedit",
   delay = "weditScroll.delay",
   doubleIterations = "weditScroll.doubleIterations",
   clearSchematics = "weditScroll.clearSchematics",
@@ -21,8 +20,7 @@ local brushShapes = {
 }
 
 function init()
-  widget.setText(widgets.noclipBind, weditInterface.getConfigData("noclipBind") or "g")
-  widget.setText(widgets.noclipSpeed, weditInterface.getConfigData("noclipSpeed") or 0.75)
+  widget.setChecked(widgets.enable, weditInterface.getConfigData("enable") or false)
   widget.setText(widgets.delay, weditInterface.getConfigData("delay") or 15)
   widget.setChecked(widgets.doubleIterations, weditInterface.getConfigData("doubleIterations") or false)
   widget.setChecked(widgets.clearSchematics, false)
@@ -46,13 +44,10 @@ function weditInterface.getConfigData(key)
   return key == nil and config or config[key]
 end
 
-function weditInterface.changeNoClipBind()
-  weditInterface.setConfigData("noclipBind", widget.getText(widgets.noclipBind))
-end
-
-function weditInterface.changeNoClipSpeed()
-  local speed = tonumber(widget.getText(widgets.noclipSpeed)) or 0.75
-  weditInterface.setConfigData("noclipSpeed", speed)
+function weditInterface.enableWEdit()
+  local bool = weditInterface.getConfigData("enable") or false
+    bool = not bool
+    weditInterface.setConfigData("enable", bool)
 end
 
 function weditInterface.changeDelay()
