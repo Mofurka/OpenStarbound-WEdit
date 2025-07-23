@@ -1,9 +1,13 @@
+require("/scripts/deg_timer_wedit/timer.lua")
+
 local MATERIAL_LIST = "materialScroll.materialList"
 local CATEGORY_LIST = "categoryScroll.categoryList"
 local BASE_GAME_ASSETS_MATERIALS = "base_blocks"
 local BASE_GAME_ASSETS_PLATFORM = "base_platforms"
 
 local materials
+
+local currentCategory = BASE_GAME_ASSETS_MATERIALS
 
 function init()
     -- Prevent multiples material pickers.
@@ -22,6 +26,45 @@ function init()
 
 end
 
+function update(dt)
+    timers:update(dt)
+end
+
+function clearSearchBar()
+    widget.setText("txbSearchBar", "")
+    if timers:has(searchTimerId) then
+        timers:remove(searchTimerId)
+    end
+end
+
+function search(wName)
+    local searchString = widget.getText(wName)
+    --chat.addMessage("Searching for: " .. searchString or "")
+    if timers:has(searchTimerId) then
+        timers:remove(searchTimerId)
+    end
+
+    searchTimerId = timers:add(0.5, function()
+        sortSearch(searchString:lower())
+    end)
+
+end
+
+function sortSearch(searchString)
+    local items = materials[currentCategory]["items"]
+    if searchString == "" then
+        populateItemList(items)
+        return
+    else
+        local sortedItems = {}
+        for _, item in ipairs(items) do
+            if item.name:lower():find(searchString) or item.shortdescription:lower():find(searchString) then
+                table.insert(sortedItems, item)
+            end
+        end
+        populateItemList(sortedItems)
+    end
+end
 
 function populateCategorySorted()
     widget.clearListItems(CATEGORY_LIST)
@@ -43,20 +86,26 @@ function addCategory(categoryName, categoryData)
 end
 
 function pickCategory()
-    local data = widget.getData(CATEGORY_LIST .. "." .. widget.getListSelected(CATEGORY_LIST))
+    local selected = widget.getListSelected(CATEGORY_LIST)
+    if not selected then
+        return
+    end
+    local data = widget.getData(CATEGORY_LIST .. "." .. selected)
+    currentCategory = data
+    clearSearchBar()
     populateItemList(materials[data]["items"])
 end
 
 function populateItemList(items)
+    widget.clearListItems(MATERIAL_LIST)
     if not items or #items == 0 then
         return
     end
-    widget.clearListItems(MATERIAL_LIST)
     for _, item in ipairs(items) do
         local w = widget.addListItem(MATERIAL_LIST)
         local wName = MATERIAL_LIST .. "." .. w
         widget.setImage(wName .. ".materialIcon", item.image)
-        widget.setData(wName .. ".emptyFrameForeground", { defaultTooltip = item.name })
+        widget.setData(wName .. ".emptyFrameForeground", { defaultTooltip = string.format("%s : %s", item.shortdescription, item.name) })
         widget.setData(wName, item.name)
     end
 end

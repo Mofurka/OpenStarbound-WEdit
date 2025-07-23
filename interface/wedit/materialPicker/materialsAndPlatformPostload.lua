@@ -41,7 +41,8 @@ for _, path in ipairs(matitems) do
             local image = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
             table.insert(materialDict[name]["items"], {
                 name = material.itemName,
-                image = image
+                image = image,
+                shortdescription = material.shortdescription or "",
             })
         else
             name = name .. "_blocks"
@@ -56,7 +57,8 @@ for _, path in ipairs(matitems) do
             local image = "/items/materials/" .. material.inventoryIcon or "/assetmissing.png"
             table.insert(materialDict[name]["items"], {
                 name = material.itemName,
-                image = image
+                image = image,
+                shortdescription = material.shortdescription or "",
             })
         end
     end

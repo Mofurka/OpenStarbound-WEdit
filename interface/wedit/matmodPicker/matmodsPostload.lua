@@ -16,7 +16,7 @@ end
 local sourcePaths = assets.sourcePaths(true)
 
 
-local matmodData = {} -- { "modName" : [ { "name" : "matmod", "buttonImage" : "/tiles/mods/air.png" } ] }
+local matmodData = {}
 
 for _, path in ipairs(matmodList) do
     local matmod = assets.json(path)
@@ -32,7 +32,7 @@ for _, path in ipairs(matmodList) do
         end
         local image = "/tiles/mods/" .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png"
         table.insert(matmodData[name]["items"], {
-            name = matmod.name,
+            name = matmod.modName,
             image = image,
         })
     end
