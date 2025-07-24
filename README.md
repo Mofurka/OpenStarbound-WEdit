@@ -1,6 +1,8 @@
 # Starbound WEdit
 
-WEdit is a tech mod that allows you to edit the world around you on a larger scale through various functions and features not present in the game.
+This is a fork of [WEdit](https://github.com/Silverfeelin/Starbound-WEdit) for OpenStarbound client, where I made some QoL features. Check the [wiki](#wiki) to see the changes.
+
+WEdit is a mod that allows you to edit the world around you on a larger scale through various functions and features not present in the game.
 
 ## Table of Contents
 
@@ -21,6 +23,14 @@ WEdit is a tech mod that allows you to edit the world around you on a larger sca
 A full list of features with their usage can be found on the [Wiki](https://github.com/Silverfeelin/Starbound-WEdit/wiki).
 
 ## Wiki
+Clarifications:
+- This is not the tech mod anymore, its work through generic script context, that allow mod to work without tech equipping.
+- To enable the mod, you need to install it and open the WEdit interface in quickbar, then check the "Enable WEdit" checkbox.
+- The mod is not compatible with the original WEdit tech, so you need to remove it from your game first.
+- The mod is not compatible with the original starbound client.
+- Added a material [collision cycling feature](#video) from OpenStarbound. It uses the same key as the OpenStarbound. Open menu, then press the "Settings" -> "Mod Binds" -> "OpenStarbound" -> "Building" -> "Cycle Material Collision". WORKS ONLY IF YOU HAVE THE OPENSB BOTH CLIENT AND SERVER INSTALLED.
+- Refactored the Material and Matmod pickers. Now they have the search bar and category sorting.
+- Blocks and Matmods are automatically added to WEdit, so it no longer requires third-party mods to add blocks from them.
 
 The Wiki covers just about everything you need to know and do to use WEdit.  
 https://github.com/Silverfeelin/Starbound-WEdit/wiki
@@ -48,3 +58,7 @@ WEdit is licensed under the MIT license. Please see: [LICENSE](https://github.co
 
 Most of the icons used for the tools are courtesy of [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/about/), and can be found in his [Fugue Icons](http://p.yusukekamiyamane.com/) pack. Some have been modified slightly to fit better into the game.  
 Fugue Icons falls under the [Creative Commons 3.0 license](http://creativecommons.org/licenses/by/3.0/).
+
+## Video
+[![WEdit Material Cycling Demonstration](https://img.youtube.com/vi/2b1g0d3k4a8/0.jpg)](https://youtu.be/k671rlXsyts)
+[![WEdit sort demonstration](https://img.youtube.com/vi/2b1g0d3k4a8/0.jpg)](https://youtu.be/_xUhWmV3Lg0)
