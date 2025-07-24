@@ -28,9 +28,9 @@ Clarifications:
 - To enable the mod, you need to install it and open the WEdit interface in quickbar, then check the "Enable WEdit" checkbox.
 - The mod is not compatible with the original WEdit tech, so you need to remove it from your game first.
 - The mod is not compatible with the original starbound client.
-- Added a material [collision cycling feature](#video) from OpenStarbound. It uses the same key as the OpenStarbound. Open menu, then press the "Settings" -> "Mod Binds" -> "OpenStarbound" -> "Building" -> "Cycle Material Collision". WORKS ONLY IF YOU HAVE THE OPENSB BOTH CLIENT AND SERVER INSTALLED.
-- Refactored the Material and Matmod pickers. Now they have the search bar and category sorting.
-- Blocks and Matmods are automatically added to WEdit, so it no longer requires third-party mods to add blocks from them.
+- Added a material collision cycling feature from OpenStarbound. It uses the same key as the OpenStarbound. Open menu, then press the "Settings" -> "Mod Binds" -> "OpenStarbound" -> "Building" -> "Cycle Material Collision". WORKS ONLY IF YOU HAVE THE OPENSB BOTH CLIENT AND SERVER INSTALLED. [WEdit Material Cycling Demonstration](https://youtu.be/k671rlXsyts)
+- Refactored the Material and Matmod pickers. Now they have the search bar and category sorting. [WEdit sort demonstration](https://youtu.be/_xUhWmV3Lg0)
+- Blocks and Matmods are automatically added to WEdit, so it no longer requires third-party mods to add blocks from them. 
 
 The Wiki covers just about everything you need to know and do to use WEdit.  
 https://github.com/Silverfeelin/Starbound-WEdit/wiki
@@ -58,7 +58,3 @@ WEdit is licensed under the MIT license. Please see: [LICENSE](https://github.co
 
 Most of the icons used for the tools are courtesy of [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/about/), and can be found in his [Fugue Icons](http://p.yusukekamiyamane.com/) pack. Some have been modified slightly to fit better into the game.  
 Fugue Icons falls under the [Creative Commons 3.0 license](http://creativecommons.org/licenses/by/3.0/).
-
-## Video
-[![WEdit Material Cycling Demonstration](https://img.youtube.com/vi/2b1g0d3k4a8/0.jpg)](https://youtu.be/k671rlXsyts)
-[![WEdit sort demonstration](https://img.youtube.com/vi/2b1g0d3k4a8/0.jpg)](https://youtu.be/_xUhWmV3Lg0)
