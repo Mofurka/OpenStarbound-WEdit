@@ -1,6 +1,11 @@
 local matmodConfigPath = "/interface/wedit/matmodPicker/matmods.json"
 
-local matmodList = assets.scan("/tiles/mods", "matmod")
+local matmodList = assets.scan("/", "matmod")
+
+local function getDirectoryPath(filePath)
+    return filePath:match("(.*/)")
+end
+
 
 local function getModName(assetSourcePaths, modPath)
     local mod = assetSourcePaths[modPath]
@@ -23,14 +28,15 @@ for _, path in ipairs(matmodList) do
     local origin = assets.origin(path)
     local name, friendlyName = getModName(sourcePaths, origin)
     if matmod then
+        local stripedPath = getDirectoryPath(path)
         if not matmodData[name] then
             matmodData[name] = {
-                image = "/tiles/mods/" .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png",
+                image = stripedPath .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png",
                 friendlyName = friendlyName .. " Mat Mods",
                 items = {},
             }
         end
-        local image = "/tiles/mods/" .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png"
+        local image = stripedPath .. matmod.renderParameters.texture .. "?crop;0;0;16;16" or "/assetmissing.png"
         table.insert(matmodData[name]["items"], {
             name = matmod.modName,
             image = image,
