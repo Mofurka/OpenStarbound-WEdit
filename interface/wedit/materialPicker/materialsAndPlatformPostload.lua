@@ -10,12 +10,12 @@ local materialDict = {}
 local function getModName(assetSourcePaths, modPath)
     local mod = assetSourcePaths[modPath]
     if mod == nil then
-        return UNKNOWN
+        return "UNKNOWN", "UNKNOWN"
     end
     if mod.name == nil then
-        mod.name = UNKNOWN
+        mod.name = "UNKNOWN"
         if mod.friendlyName == nil then
-            mod.friendlyName = UNKNOWN
+            mod.friendlyName = "UNKNOWN"
         end
     end
     return mod.name, mod.friendlyName

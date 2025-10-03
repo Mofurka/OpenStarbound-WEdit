@@ -4,11 +4,13 @@ local matmodList = assets.scan("/tiles/mods", "matmod")
 
 local function getModName(assetSourcePaths, modPath)
     local mod = assetSourcePaths[modPath]
-    if mod == nil then return UNKNOWN end
+    if mod == nil then
+        return "UNKNOWN", "UNKNOWN"
+    end
     if mod.name == nil then
-        mod.name = UNKNOWN
+        mod.name = "UNKNOWN"
         if mod.friendlyName == nil then
-            mod.friendlyName = UNKNOWN
+            mod.friendlyName = "UNKNOWN"
         end
     end
     return mod.name, mod.friendlyName
